@@ -1,0 +1,22 @@
+Simulating with Delayed Differential Equations
+    - Python based approach
+        - https://arxiv.org/abs/0911.1633
+        - http://pydelay.sourceforge.net/       
+        Download pydelay-0.1.1.tar.gz
+        Extract and within folder
+            $ sudo python3 setup.py install
+                # Fix errors due to python3
+                    raise sintax in _dde23.py
+                # Other errors in doc related files
+                    Ignored
+        Requires Weaver, which is deprecated
+        
+        Delete installation
+            python setup.py install --record files.txt to generate the list
+            cat files.txt | sudo xargs rm -rf
+            sudo rm -rf /usr/local/lib/python3.5/dist-packages/pydelay
+
+    -MATLAB based approach
+        https://www.mathworks.com/help/matlab/ref/dde23.html
+        http://www.runet.edu/~thompson/webddes/tutorial.pdf
+        http://www.mathworks.com/matlabcentral/fileexchange/3899-tutorial-on-solving-ddes-with-dde23
