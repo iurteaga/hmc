@@ -7,6 +7,7 @@ import argparse
 import pdb
 import numpy as np
 import pyGPs
+from itertools import combinations
 
 import matplotlib.pyplot as plt
 from matplotlib import colors
@@ -21,15 +22,19 @@ def fit_GP(f_mean, f_cov, opt_params, x_train, y_train):
     # Set optimization parameters
     if opt_params:
         model.setOptimizer(opt_params['method'], num_restarts=opt_params['n_restarts'])
+
     # Fit model and optimize hyperparameters with train data
-    model.optimize(x_train,y_train)
+    try:
+        model.optimize(x_train,y_train)
+    except:
+        print('GP fitting and optimization error: ', sys.exc_info())
+        model=None
     
     return model
     
 def plot_GP_prediction(model, x, y, plot_save):
 
     # Predict with x
-    assert x.size==y.size
     model.predict(x)
     
     # Prediction plotting
@@ -63,7 +68,7 @@ def plot_GP_prediction(model, x, y, plot_save):
         plt.close()
     '''
     
-def main(data_file, t_init, gp_cov_f):
+def main(data_file, t_init, d_x, gp_cov_f):
 
     # Load data from file
     true_y=np.loadtxt(data_file, delimiter=',')
@@ -85,7 +90,7 @@ def main(data_file, t_init, gp_cov_f):
 
     # Evaluate over parameter set
     # Noise
-    sigma_factors=np.linspace(0,1,1)
+    sigma_factors=np.linspace(0,0.1,10)
     # Sampling rates
     sampling_rates=np.array([1,2,3,4,5,6,7,10,15], dtype=int)
     # Input/output info
@@ -106,67 +111,60 @@ def main(data_file, t_init, gp_cov_f):
                 f_m = pyGPs.mean.Const() # Mean function
                 
                 # Periodicity kernel
-                T=30    # Initial periodicity
-                if 'periodic' in gp_cov_f:
-                    f_k = pyGPs.cov.Periodic(log_p=np.log(T/sampling_rate))
+                if d_x==1:
+                    T=30    # Initial periodicity
+                    if 'periodic' in gp_cov_f:
+                        f_k = pyGPs.cov.Periodic(log_p=np.log(T/sampling_rate))
 
-                elif 'periodic_2' in gp_cov_f:
-                    f_k = pyGPs.cov.Periodic(log_ell=0.0, log_p=np.log(T/sampling_rate), log_sigma=0.0) + pyGPs.cov.Periodic(log_ell=0.0, log_p=np.log(T/2/sampling_rate), log_sigma=0.0)
+                    elif 'periodic_2' in gp_cov_f:
+                        f_k = pyGPs.cov.Periodic(log_ell=0.0, log_p=np.log(T/sampling_rate), log_sigma=0.0) + pyGPs.cov.Periodic(log_ell=0.0, log_p=np.log(T/2/sampling_rate), log_sigma=0.0)
 
-                elif 'periodic_3' in gp_cov_f:
-                    f_k = pyGPs.cov.Periodic(log_ell=0.0, log_p=np.log(T/sampling_rate), log_sigma=0.0) + pyGPs.cov.Periodic(log_ell=0.0, log_p=np.log(T/2/sampling_rate), log_sigma=0.0) + pyGPs.cov.Periodic(log_ell=0.0, log_p=np.log(T/4/sampling_rate), log_sigma=0.0)
-                    
-                elif 'periodic_4' in gp_cov_f:
-                    f_k = pyGPs.cov.Periodic(log_ell=0.0, log_p=np.log(T/sampling_rate), log_sigma=0.0) + pyGPs.cov.Periodic(log_ell=0.0, log_p=np.log(T/2/sampling_rate), log_sigma=0.0) + pyGPs.cov.Periodic(log_ell=0.0, log_p=np.log(T/4/sampling_rate), log_sigma=0.0) + pyGPs.cov.Periodic(log_ell=0.0, log_p=np.log(T/8/sampling_rate), log_sigma=0.0)
-
+                    elif 'periodic_3' in gp_cov_f:
+                        f_k = pyGPs.cov.Periodic(log_ell=0.0, log_p=np.log(T/sampling_rate), log_sigma=0.0) + pyGPs.cov.Periodic(log_ell=0.0, log_p=np.log(T/2/sampling_rate), log_sigma=0.0) + pyGPs.cov.Periodic(log_ell=0.0, log_p=np.log(T/4/sampling_rate), log_sigma=0.0)
+                        
+                    elif 'periodic_4' in gp_cov_f:
+                        f_k = pyGPs.cov.Periodic(log_ell=0.0, log_p=np.log(T/sampling_rate), log_sigma=0.0) + pyGPs.cov.Periodic(log_ell=0.0, log_p=np.log(T/2/sampling_rate), log_sigma=0.0) + pyGPs.cov.Periodic(log_ell=0.0, log_p=np.log(T/4/sampling_rate), log_sigma=0.0) + pyGPs.cov.Periodic(log_ell=0.0, log_p=np.log(T/8/sampling_rate), log_sigma=0.0)
+                        
+                    # ARD based kernels
+                    if 'RBFard' in gp_cov_f:
+                        f_k += pyGPs.cov.RBFard(D=d_x)
+                        
+                    if 'RQard' in gp_cov_f:
+                        f_k += pyGPs.cov.RQard(D=d_x)
                 else:
-                    raise ValueError('At least one periodic kernel is required in gp_cov_f={}'.format(gp_cov_f))
-         
+                    # ARD based kernels
+                    if 'RBFard' in gp_cov_f:
+                        f_k = pyGPs.cov.RBFard(D=d_x)
+                        
+                    if 'RQard' in gp_cov_f:
+                        f_k = pyGPs.cov.RQard(D=d_x)
+                    
                 # GP input/output
                 for y_idx in y_idxs:
-                    for x_idx in x_idxs:
-
-                        # One input to one output
-                        if 'RBFard' in gp_cov_f:
-                            f_k += pyGPs.cov.RBFard(D=1)
-                            
-                        if 'RQard' in gp_cov_f:
-                            f_k += pyGPs.cov.RQard(D=1)
-                    
+                    for x_idx in combinations(np.arange(x_idxs.max()+1),d_x):                    
                         # Fit to training set
-                        fitted_GP=fit_GP(f_m, f_k, opt_params, x[x_idx,0:t_train:sampling_rate], y[y_idx,0:t_train:sampling_rate])
-                        # Save model
-                        save_name=dir_string+'/y{}_x{}_train{}_rate{}_sigmaf{}_'.format(y_idx+1, x_idx, t_train, sampling_rate, sigma_factor)
-                        with open(save_name+'gp.pickle', 'wb') as f:
-                            pickle.dump(fitted_GP, f)
-                        # Plotting
-                        plot_GP_prediction(fitted_GP, x[x_idx,:], y[y_idx,:], save_name)
+                        print('y{}_x{}_train{}_rate{}_sigmaf{}'.format(y_idx+1, ''.join(map(str, x_idx)), t_train, sampling_rate, sigma_factor))
+                        fitted_GP=fit_GP(f_m, f_k, opt_params, x[np.array(x_idx),0:t_train:sampling_rate].T, y[y_idx,0:t_train:sampling_rate])
                         
-                        '''
-                        # Multiple input to one output
-                        if 'RBFard' in gp_cov_f:
-                            f_newk = pyGPs.cov.RBFard(D=x_idx+1)
-                            
-                        if 'RQard' in gp_cov_f:
-                            f_newk = pyGPs.cov.RQard(D=x_idx+1)
-                    
-                        # Fit to training set
-                        fitted_GP=fit_GP(f_m, f_k+f_newk, opt_params, x[:x_idx+1,0:t_train:sampling_rate].T, y[y_idx,0:t_train:sampling_rate])
-                        # Save model
-                        save_name=dir_string+'/y{}_x{}_train{}_rate{}_sigmaf{}_'.format(y_idx+1, ''.join(map(str, np.arange(x_idx+1).tolist())), t_train, sampling_rate, sigma_factor)
-                        with open(save_name+'gp.pickle', 'wb') as f:
-                            pickle.dump(fitted_GP, f)
-                        # Plotting
-                        plot_GP_prediction(fitted_GP, x[:x_idx+1,:].T, y[y_idx,:], save_name)
-                        '''
+                        # If model is fitted
+                        if fitted_GP:
+                            # Save model
+                            save_name=dir_string+'/y{}_x{}_train{}_rate{}_sigmaf{}_'.format(y_idx+1, ''.join(map(str, x_idx)), t_train, sampling_rate, sigma_factor)
+                            with open(save_name+'gp.pickle', 'wb') as f:
+                                pickle.dump(fitted_GP, f)
+                            # Plotting
+                            plot_GP_prediction(fitted_GP, x[np.array(x_idx),:].T, y[y_idx,:], save_name)
+                        else:
+                            print('ERROR when fitting GP for y{}_x{}_train{}_rate{}_sigmaf{}'.format(y_idx+1, ''.join(map(str, x_idx)), t_train, sampling_rate, sigma_factor))                    
         
 # Making sure the main program is not executed when the module is imported
 if __name__ == '__main__':
     # Input parser
-    # Example: python3 -m pdb predict_hmc_gp.py -data_file ../data/y_alpha_KmLH/y_clark_y_init_normal_t250_yscale_1_alpha_0.77_KmLH_530 -t_init 100 -gp_cov_f periodic
+    # Example: python3 -m pdb predict_hmc_gp.py -data_file ../data/y_alpha_KmLH/y_clark_y_init_normal_t250_yscale_1_alpha_0.77_KmLH_530 -t_init 100 -d_x 1 -gp_cov_f periodic
     parser = argparse.ArgumentParser(description='Gaussian process for hormonal menstrual cycle prediction')
     parser.add_argument('-data_file', type=str, default=None, help='Data file to process')
     parser.add_argument('-t_init', type=int, default=100, help='Initial time-instants to skip')
+    parser.add_argument('-d_x', type=int, default=1, help='Dimensionality of input')
     parser.add_argument('-gp_cov_f', nargs='+', type=str, default=None, help='Type of covariance function to use')
 
     # Get arguments
@@ -176,5 +174,5 @@ if __name__ == '__main__':
     assert os.path.isfile(args.data_file), 'Data file could not be found'
 
     # Call main function
-    main(args.data_file, args.t_init, args.gp_cov_f)
+    main(args.data_file, args.t_init, args.d_x, args.gp_cov_f)
 
