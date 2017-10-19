@@ -6,6 +6,7 @@ import scipy.stats as stats
 import sys, os, re
 import argparse
 from itertools import *
+import pdb
 
 # Main code
 def main(exec_machine, data_file, t_init):
@@ -14,6 +15,7 @@ def main(exec_machine, data_file, t_init):
     # For each of the possible models
     python_scripts=[]
     
+    # One input
     python_scripts+=['../src/predict_hmc_gp.py -data_file {} -t_init {} -gp_cov_f periodic'.format(data_file, t_init)]
     python_scripts+=['../src/predict_hmc_gp.py -data_file {} -t_init {} -gp_cov_f periodic_2'.format(data_file, t_init)]
     python_scripts+=['../src/predict_hmc_gp.py -data_file {} -t_init {} -gp_cov_f periodic_3'.format(data_file, t_init)]
@@ -28,12 +30,18 @@ def main(exec_machine, data_file, t_init):
     python_scripts+=['../src/predict_hmc_gp.py -data_file {} -t_init {} -gp_cov_f periodic_2 RQard'.format(data_file, t_init)]
     python_scripts+=['../src/predict_hmc_gp.py -data_file {} -t_init {} -gp_cov_f periodic_3 RQard'.format(data_file, t_init)]
     python_scripts+=['../src/predict_hmc_gp.py -data_file {} -t_init {} -gp_cov_f periodic_4 RQard'.format(data_file, t_init)]
+    
+    # Multiple inputs
+    for d_x in np.arange(1,7):
+        python_scripts+=['../src/predict_hmc_gp.py -data_file {} -t_init {} -d_x {} -gp_cov_f RBFard'.format(data_file, t_init, d_x)]
+        python_scripts+=['../src/predict_hmc_gp.py -data_file {} -t_init {} -d_x {} -gp_cov_f RQard'.format(data_file, t_init, d_x)]
         
     # Python script
     for (idx, python_script) in enumerate(python_scripts):
-        job_name='job_{}_{}_{}'.format(idx, python_script.split()[0].split('.')[0], python_script.split()[-1])
+        job_name='job_{}_{}_{}'.format(idx, python_script.split()[0].split('/')[-1].split('.')[0], str.replace(''.join(python_script.split('-')[2:]), ' ', '_'))
         # Execute
         print('Executing {}'.format(python_script))
+
         if exec_machine=='laptop':
             os.system('python3 {}'.format(python_script))
         elif exec_machine=='habanero' or exec_machine=='yeti':

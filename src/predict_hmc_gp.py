@@ -111,7 +111,7 @@ def main(data_file, t_init, d_x, gp_cov_f):
                 f_m = pyGPs.mean.Const() # Mean function
                 
                 # Periodicity kernel
-                if d_x==1:
+                if 'periodic' in gp_cov_f or 'periodic_2' in gp_cov_f or 'periodic_3' in gp_cov_f or 'periodic_4' in gp_cov_f:
                     T=30    # Initial periodicity
                     if 'periodic' in gp_cov_f:
                         f_k = pyGPs.cov.Periodic(log_p=np.log(T/sampling_rate))
