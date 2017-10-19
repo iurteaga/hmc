@@ -138,7 +138,20 @@ def main(data_file, t_init, d_x, gp_cov_f):
                         
                     if 'RQard' in gp_cov_f:
                         f_k = pyGPs.cov.RQard(D=d_x)
-                    
+                        
+                    if 'SM' in gp_cov_f:
+                        raise ValueError('SM is not implemented yet, as optimization errors occur')
+                        '''
+                        T=30    # Initial periodicity
+                        Q = 4 # Number of mixtures
+                        weights=np.ones(Q)
+                        periods=np.linspace(0.01,T,Q)
+                        length_scales=1*np.ones(Q)
+                        hyp = np.array([ np.log(weights), np.log(1/periods), np.log(np.sqrt(length_scales))])
+                        #f_k = pyGPs.cov.SM(Q, hyp.flatten().tolist())
+                        f_k = pyGPs.cov.SM(Q, D=d_x)
+                        '''
+                        
                 # GP input/output
                 for y_idx in y_idxs:
                     for x_idx in combinations(np.arange(x_idxs.max()+1),d_x):                    
