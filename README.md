@@ -10,6 +10,7 @@ Contains source code and documentation.
 Latex files (and corresponding pdfs) for reports and articles on the hmc problem:
 
 - doc/refs: some useful references
+- doc/ml4h_2017: Article submitted to https://ml4health.github.io/2017/
 
 ### src
 
