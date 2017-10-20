@@ -15,26 +15,26 @@ def main(exec_machine, data_file, t_init):
     # For each of the possible models
     python_scripts=[]
     
-    # One input
-    python_scripts+=['../src/predict_hmc_gp.py -data_file {} -t_init {} -gp_cov_f periodic'.format(data_file, t_init)]
-    python_scripts+=['../src/predict_hmc_gp.py -data_file {} -t_init {} -gp_cov_f periodic_2'.format(data_file, t_init)]
-    python_scripts+=['../src/predict_hmc_gp.py -data_file {} -t_init {} -gp_cov_f periodic_3'.format(data_file, t_init)]
-    python_scripts+=['../src/predict_hmc_gp.py -data_file {} -t_init {} -gp_cov_f periodic_4'.format(data_file, t_init)]
-
-    python_scripts+=['../src/predict_hmc_gp.py -data_file {} -t_init {} -gp_cov_f periodic RBFard'.format(data_file, t_init)]
-    python_scripts+=['../src/predict_hmc_gp.py -data_file {} -t_init {} -gp_cov_f periodic_2 RBFard'.format(data_file, t_init)]
-    python_scripts+=['../src/predict_hmc_gp.py -data_file {} -t_init {} -gp_cov_f periodic_3 RBFard'.format(data_file, t_init)]
-    python_scripts+=['../src/predict_hmc_gp.py -data_file {} -t_init {} -gp_cov_f periodic_4 RBFard'.format(data_file, t_init)]
-
-    python_scripts+=['../src/predict_hmc_gp.py -data_file {} -t_init {} -gp_cov_f periodic RQard'.format(data_file, t_init)]
-    python_scripts+=['../src/predict_hmc_gp.py -data_file {} -t_init {} -gp_cov_f periodic_2 RQard'.format(data_file, t_init)]
-    python_scripts+=['../src/predict_hmc_gp.py -data_file {} -t_init {} -gp_cov_f periodic_3 RQard'.format(data_file, t_init)]
-    python_scripts+=['../src/predict_hmc_gp.py -data_file {} -t_init {} -gp_cov_f periodic_4 RQard'.format(data_file, t_init)]
+    # Optimization restarts
+    opt_restarts=50
     
     # Multiple inputs
     for d_x in np.arange(1,7):
-        python_scripts+=['../src/predict_hmc_gp.py -data_file {} -t_init {} -d_x {} -gp_cov_f RBFard'.format(data_file, t_init, d_x)]
-        python_scripts+=['../src/predict_hmc_gp.py -data_file {} -t_init {} -d_x {} -gp_cov_f RQard'.format(data_file, t_init, d_x)]
+        # Evaluate over parameter set
+        # Noise
+        sigma_factors=np.array([0,0.001,0.01,0.1])
+        # Sampling rates
+        sampling_rates=np.array([1,2,4,7,15], dtype=int)
+        # Number of training points
+        t_trains=np.array([40,70,100], dtype=int)
+        
+        for t_train in t_trains:
+            for sampling_rate in sampling_rates:
+                for sigma_factor in sigma_factors:
+                    gp_cov_f='RBFard'
+                    python_scripts+=['../src/predict_hmc_gp.py -data_file {} -t_init {} -t_train {} -sampling_rate {} -sigma_factor {} -d_x {} -gp_cov_f {} -opt_restarts {}'.format(data_file, t_init, t_train, sampling_rate, sigma_factor, d_x, gp_cov_f, opt_restarts)]
+                    gp_cov_f='RQard'
+                    python_scripts+=['../src/predict_hmc_gp.py -data_file {} -t_init {} -t_train {} -sampling_rate {} -sigma_factor {} -d_x {} -gp_cov_f {} -opt_restarts {}'.format(data_file, t_init, t_train, sampling_rate, sigma_factor, d_x, gp_cov_f, opt_restarts)]
         
     # Python script
     for (idx, python_script) in enumerate(python_scripts):
@@ -67,11 +67,11 @@ def main(exec_machine, data_file, t_init):
                     os.system('sbatch ./{}/{}.sh'.format(exec_machine, job_name))
                 if exec_machine=='yeti':
                     os.system('qsub ./{}/{}.sh'.format(exec_machine, job_name))
-            
+  
 # Making sure the main program is not executed when the module is imported
 if __name__ == '__main__':
     # Input parser
-    # Example: python3 -m pdb execute_predict_hmc_gp.py -exec_machine habanero -data_file ../data/y_alpha_KmLH/y_clark_y_init_normal_t250_yscale_1_alpha_0.77_KmLH_560 -t_init 100
+    # Example: python3 -m pdb execute_predict_hmc_gp_dx.py -exec_machine habanero -data_file ../data/y_alpha_KmLH/y_clark_y_init_normal_t250_yscale_1_alpha_0.77_KmLH_580 -t_init 100
     parser = argparse.ArgumentParser(description='Gaussian process for hormonal menstrual cycle prediction')
     parser.add_argument('-exec_machine', type=str, default='laptop', help='Where to run the simulation')
     parser.add_argument('-data_file', type=str, default=None, help='Data file to process')

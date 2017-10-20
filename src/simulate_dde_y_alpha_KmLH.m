@@ -1,5 +1,5 @@
 function simulate_dde_y_alpha_KmLH(model, params_file, y0_file, options_file, t_max, n_t)
-    % simulate_dde_y_alpha_KmLH('clark', './input/clark_params', './input/clark_y_init_normal', './input/options_file', 150, 150)
+    % simulate_dde_y_alpha_KmLH('clark', '../src/input/clark_params', '../src/input/clark_y_init_normal', '../src/input/options_file', 150, 150)
     
     % Model to simulate
     model_dde=eval(['@' model '_dde'])
@@ -36,8 +36,8 @@ function simulate_dde_y_alpha_KmLH(model, params_file, y0_file, options_file, t_
     mkdir('../data', 'y_alpha_KmLH');
     %y_scales=linspace(0.7, 1.3, 101);
     y_scales=1.0
-    alpha_ranges=linspace(0.75, 0.8, 11);
-    KmLH_ranges=linspace(300, 800, 101);
+    alpha_ranges=linspace(0.7, 0.8, 21);
+    KmLH_ranges=linspace(500, 800, 151);
     for y_scale=y_scales
         for KmLH=KmLH_ranges
             for alpha=alpha_ranges
