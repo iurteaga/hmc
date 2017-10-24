@@ -28,8 +28,8 @@ results_dir='../results/y_alpha_KmLH'
 os.makedirs(results_dir, exist_ok=True)
 
 # Trick
-alpha_ranges=np.linspace(0.75, 0.8, 11)
-KmLH_ranges=np.linspace(300, 800, 101)
+alpha_ranges=np.linspace(0.7, 0.8, 21)
+KmLH_ranges=np.linspace(500, 800, 151)
 lh_f=np.zeros((alpha_ranges.size, KmLH_ranges.size))
 
 # For all files
@@ -62,7 +62,7 @@ for filename in os.listdir(data_dir):
             
             # Plotting
             plot_save=results_dir+'/'+filename
-            '''
+
             # State plotting
             for yd in np.arange(y.shape[0]):
                 #plt.plot(t, y[yd,:], my_colors[yd], label='y[{}]'.format(yd))
@@ -96,8 +96,6 @@ for filename in os.listdir(data_dir):
             else:
                 plt.savefig(plot_save+'_fft_fmax{}.pdf'.format(f_plot), format='pdf', bbox_inches='tight')
                 plt.close()
-            
-            '''
 
 # Heatmap          
 fig, ax = plt.subplots(1)
