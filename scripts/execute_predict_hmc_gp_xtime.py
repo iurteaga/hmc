@@ -16,13 +16,12 @@ def main(exec_machine, data_file, t_init, sampling_type, sampling_peak, opt_rest
     python_scripts=[]
     # Evaluate over parameter set
     # Noise
-    sigma_factors=np.array([0,0.01,0.01,0.1])
+    sigma_factors=np.array([0,0.001,0.01,0.1])
     
     # Sampling rates
-    sampling_rates=np.array([1,2,4,6,10,15], dtype=int)
+    sampling_rates=np.array([1,2,4,7], dtype=int)
     
     # Number of training points
-    t_trains=np.array([40,70,100], dtype=int)
     # Based on peaks of data file
     true_y=np.loadtxt(data_file, delimiter=',')
     # Forget initial data points
@@ -33,15 +32,17 @@ def main(exec_machine, data_file, t_init, sampling_type, sampling_peak, opt_rest
     peak_y, peak_t=np.where(true_y>true_y.mean(axis=1,keepdims=True)+true_y.std(axis=1,keepdims=True))
     diff_peak_t=np.diff(peak_t)
     max_diff_peak_t=diff_peak_t[diff_peak_t>1].max()
-    t_trains=np.arange(max_diff_peak_t,t_max,max_diff_peak_t)[:3] # Containing first 3 periods
+    t_trains=np.arange(max_diff_peak_t,t_max,max_diff_peak_t)[1:3] # Containing first 3 periods
     
     for t_train in t_trains:
         for sampling_rate in sampling_rates:
-            for sigma_factor in sigma_factors:                
-                gp_cov_f='periodic RQard'
-                python_scripts+=['../src/predict_hmc_gp_xtime.py -data_file {} -t_init {} -t_train {} -sampling_type {} -sampling_rate {} -sampling_peak {} -sigma_factor {} -gp_cov_f {} -opt_restarts {} -R {}'.format(data_file, t_init, t_train, sampling_type, sampling_rate, sampling_peak, sigma_factor, gp_cov_f, opt_restarts, R)]
-                gp_cov_f='periodic_2 RQard'
-                python_scripts+=['../src/predict_hmc_gp_xtime.py -data_file {} -t_init {} -t_train {} -sampling_type {} -sampling_rate {} -sampling_peak {} -sigma_factor {} -gp_cov_f {} -opt_restarts {} -R {}'.format(data_file, t_init, t_train, sampling_type, sampling_rate, sampling_peak, sigma_factor, gp_cov_f, opt_restarts, R)]
+            for sigma_factor in sigma_factors:
+                # TODO: take this dirty trick out
+                #for r in np.arange(R):
+                    gp_cov_f='periodic RQard'
+                    python_scripts+=['../src/predict_hmc_gp_xtime.py -data_file {} -t_init {} -t_train {} -sampling_type {} -sampling_rate {} -sampling_peak {} -sigma_factor {} -gp_cov_f {} -opt_restarts {} -R {}'.format(data_file, t_init, t_train, sampling_type, sampling_rate, sampling_peak, sigma_factor, gp_cov_f, opt_restarts, R)]
+                    #gp_cov_f='periodic_2 RQard'
+                    #python_scripts+=['../src/predict_hmc_gp_xtime.py -data_file {} -t_init {} -t_train {} -sampling_type {} -sampling_rate {} -sampling_peak {} -sigma_factor {} -gp_cov_f {} -opt_restarts {} -R {}'.format(data_file, t_init, t_train, sampling_type, sampling_rate, sampling_peak, sigma_factor, gp_cov_f, opt_restarts, R)]
                             
     # Python script
     for (idx, python_script) in enumerate(python_scripts):

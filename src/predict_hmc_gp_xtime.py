@@ -148,7 +148,9 @@ def main(data_file, t_init, t_train, sampling_type, sampling_rate, sampling_peak
         f_k += pyGPs.cov.RQard(D=1)
 
     # Different realizations
+    # TODO: Undo dirty trick for paralelization
     for r in np.arange(R):
+    #for r in np.array([R]):
         # Add Gaussian noise to true observations
         y=true_y+sigma_factor*true_y.std(axis=1,keepdims=True)*np.random.randn(y_d,t_max)
         
@@ -184,7 +186,7 @@ def main(data_file, t_init, t_train, sampling_type, sampling_rate, sampling_peak
 
                 # Plotting
                 plot_name=dir_string+'/y{}_train{}_{}_rate{}_{}_sigmaf{}_r{}_'.format(y_idx+1, t_train, sampling_type, sampling_rate, sampling_peak, sigma_factor,r)
-                plot_GP_predict_y(fitted_GP[y_idx], t_training, y[y_idx,t_training], true_y[y_idx,:], plot_name)
+                #plot_GP_predict_y(fitted_GP[y_idx], t_training, y[y_idx,t_training], true_y[y_idx,:], plot_name)
                 #plot_GP_predict_y_error(fitted_GP[y_idx], t_train, true_y[y_idx,:], plot_name)
                 #plot_GP_predict_peaks(fitted_GP[y_idx], t_train, true_y[y_idx,:], plot_name)
                 
