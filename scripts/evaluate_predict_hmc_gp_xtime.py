@@ -28,10 +28,18 @@ def main(exec_machine, data_file, t_init, R):
     # TODO: is now copied from execute_predict_hmc_gp_xtime.py
     sampling_types=np.array(['uniform', 'random'])
     sampling_peaks=np.array(['nopeak', 'peak'])
+    # y_clark_y_init_normal_t500_yscale_1_alpha_0.77_KmLH_580
     # Noise
     sigma_factors=np.array([0,0.01,0.1])
     # Sampling rates
     sampling_rates=np.array([1,2,4,6,10,15], dtype=int)
+    
+    # For y_clark_y_init_normal_t500_yscale_1_alpha_0.77_KmLH_582
+    # Noise
+    sigma_factors=np.array([0,0.001,0.01,0.1])
+    # Sampling rates
+    sampling_rates=np.array([1,2,4,7], dtype=int)
+
 
     # Number of training points
     # Based on peaks of data file
