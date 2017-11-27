@@ -11,6 +11,9 @@
 *.bbl
 *.blg
 *.out
+*.nav
+*.snm
+*.toc
 
 ### Python
 # Byte-compiled / optimized / DLL files
