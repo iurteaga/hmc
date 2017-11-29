@@ -52,34 +52,13 @@ def main(exec_machine, data_file, t_init, sampling_type, sampling_peak, opt_rest
 
         if exec_machine=='laptop':
             os.system('python3 {}'.format(python_script))
-        elif exec_machine=='habanero' or exec_machine=='yeti':
-            # Script folders
-            os.makedirs('{}/{}'.format(os.getcwd(), exec_machine), exist_ok=True)
-            # Load template job script
-            with open('./template_job_{}.sh'.format(exec_machine)) as template:
-                # Read template
-                template_data=template.read()
-                # Open new job file to write
-                with open('./{}/{}.sh'.format(exec_machine, job_name), 'w') as new_job:
-                    # Update job name
-                    new_job_data=re.sub('template_job',job_name,template_data)
-                    # Update output name
-                    new_job_data=re.sub('template_output','{}/{}/{}'.format(os.getcwd(), exec_machine, job_name),new_job_data)
-                    # Update python script
-                    new_job_data=re.sub('python_job','python -u {}'.format(python_script),new_job_data)
-                    # Write to file and close
-                    new_job.write(new_job_data)
-                    new_job.close()
-                # Execute new script
-                if exec_machine=='habanero':
-                    os.system('sbatch ./{}/{}.sh'.format(exec_machine, job_name))
-                if exec_machine=='yeti':
-                    os.system('qsub ./{}/{}.sh'.format(exec_machine, job_name))
+        else:
+            print('Only local execution available')
             
 # Making sure the main program is not executed when the module is imported
 if __name__ == '__main__':
     # Input parser
-    # Example: python3 -m pdb execute_predict_hmc_gp_xtime.py -exec_machine habanero -data_file ../data/y_alpha_KmLH/y_clark_y_init_normal_t250_yscale_1_alpha_0.77_KmLH_580 -t_init 100 -sampling_type uniform -sampling_peak peak -opt_restarts 10 -R 25
+    # Example: python3 -m pdb execute_predict_hmc_gp_xtime.py -data_file ../data/y_alpha_KmLH/y_clark_y_init_normal_t250_yscale_1_alpha_0.77_KmLH_580 -t_init 100 -sampling_type uniform -sampling_peak peak -opt_restarts 10 -R 25
     parser = argparse.ArgumentParser(description='Gaussian process for hormonal menstrual cycle prediction')
     parser.add_argument('-exec_machine', type=str, default='laptop', help='Where to run the simulation')
     parser.add_argument('-data_file', type=str, default=None, help='Data file to process')
