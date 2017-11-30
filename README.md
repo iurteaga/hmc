@@ -1,20 +1,21 @@
-# hmc
-Repository for the work on hormonal menstrual cycle
+# Hormonal menstrual cycle project
 
-Contains source code and documentation.
+Repository for the work on hormonal menstrual cycle: experiments with mechanistic models and machine learning.
+
+Towards Personalized Modeling of the Female Hormonal Cycle: Experiments with Mechanistic Models and Gaussian Processes
+Iñigo Urteaga, David J. Albers, Marija Vlajic Wheeler, Anna Druet, Hans Raffauf, Noémie Elhadad
+Accepted poster at NIPS 2017 Workshop on Machine Learning for Health (https://ml4health.github.io/2017/)
 
 ## Directories
 
-### doc
-
-Latex files (and corresponding pdfs) for reports and articles on the hmc problem:
-
-- doc/ml4h_2017: Article submitted to https://ml4health.github.io/2017/
-
 ### src
 
-Directory where algorithms for simulation and prediction of hmc data are implemented.
+Directory where the algorithms for simulation and prediction of hmc data are implemented.
 
 ### scripts
 
-Helpful python (and bash) code for plotting and evaluation of hmc algorithms.
+Python code for plotting and evaluation of hmc algorithms.
+
+### example_data
+
+Examples of siimulated hormonal data from the mechanistic model, for specific parameterizations.
