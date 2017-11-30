@@ -16,6 +16,8 @@ Directory where the algorithms for simulation and prediction of hmc data are imp
 
 Python code for plotting and evaluation of hmc algorithms.
 
-### example_data
+### data
 
-Examples of siimulated hormonal data from the mechanistic model, for specific parameterizations.
+Directory where the mechanistic model saves the generated hormonal data
+
+- data/examples: some examples of simulated hormonal data for specific parameterizations.
