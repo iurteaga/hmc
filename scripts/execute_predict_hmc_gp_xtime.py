@@ -8,6 +8,14 @@ import argparse
 from itertools import *
 import pdb
 
+############################################################
+### Script to execute a set of GP predictions with different parameterizations in parallel
+###     Reads true data from provided data_file
+###     Reads several sampling and GP execution parameters from standard input
+###     Iterates over hard-coded noise and sampling rates
+###     Executes file ../src/predict_hmc_gp_xtime.py with different parameterizations in parallel 
+############################################################
+
 # Main code
 def main(exec_machine, data_file, t_init, sampling_type, sampling_peak, opt_restarts, R):
   

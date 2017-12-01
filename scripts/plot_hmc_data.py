@@ -11,6 +11,13 @@ from matplotlib import colors
 # Plotting colors
 my_colors=[colors.cnames['black'], colors.cnames['skyblue'], colors.cnames['cyan'], colors.cnames['blue'], colors.cnames['palegreen'], colors.cnames['lime'], colors.cnames['green'], colors.cnames['yellow'], colors.cnames['orange'], colors.cnames['red'], colors.cnames['purple'], colors.cnames['fuchsia'], colors.cnames['pink'], colors.cnames['saddlebrown'], colors.cnames['chocolate'], colors.cnames['burlywood']]
 
+############################################################
+### Script to plot mechanistic model's output
+###     Reads data from data_dir='../data/y_alpha_KmLH'
+###     Plots results in results_dir='../results/y_alpha_KmLH'
+###     Plots: hormones over time, FFT, and LH frequency/period heatmap
+############################################################
+
 # TODO: figure out true sampling rate from data
 f_sampling=1.
 # Number of FFT points

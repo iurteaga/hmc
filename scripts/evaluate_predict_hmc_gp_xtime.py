@@ -14,6 +14,13 @@ from matplotlib import colors
 # Plotting colors
 my_colors=[colors.cnames['black'], colors.cnames['skyblue'], colors.cnames['cyan'], colors.cnames['blue'], colors.cnames['palegreen'], colors.cnames['lime'], colors.cnames['green'], colors.cnames['yellow'], colors.cnames['orange'], colors.cnames['red'], colors.cnames['purple'], colors.cnames['fuchsia'], colors.cnames['pink'], colors.cnames['saddlebrown'], colors.cnames['chocolate'], colors.cnames['burlywood']]
 
+############################################################
+### Script to evaluate GP output with respect to true mechanistic model output
+###     Reads true data from provided data_file
+###     Reads GP data from provided '../results/data_file/' directory with provided parameters
+###     Computes peaks/valleys and prints to stdout all accuracy metrics
+############################################################
+
 def main(exec_machine, data_file, t_init, R):
 
     ########## General conf ##########
