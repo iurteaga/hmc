@@ -6,12 +6,21 @@ import sys, os
 import argparse
 import pdb
 import numpy as np
-import pyGPs
 from itertools import combinations
+# Gaussian process module by Neumann et al. [24]
+import pyGPs
 
 import matplotlib.pyplot as plt
 from matplotlib import colors
 
+############################################################
+### Source to fit a GP to provided training data and predict over test set
+###     Reads true data from provided data_file
+###     Processes data and fits GP based on provided script parameters
+###     Saves GP object to '../results/data_file/' directory with provided parameters
+############################################################
+
+# GP fitting
 def fit_GP(f_mean, f_cov, opt_params, x_train, y_train):
     # GP regression model
     model = pyGPs.GPR()
@@ -31,7 +40,8 @@ def fit_GP(f_mean, f_cov, opt_params, x_train, y_train):
         model=None
     
     return model
-    
+
+# Plotting GP prediction
 def plot_GP_predict_y(model, t_train, y_train, y, plot_save):  
     # Prediction plotting
     assert y.size==model.fm.size
@@ -51,6 +61,7 @@ def plot_GP_predict_y(model, t_train, y_train, y, plot_save):
         plt.savefig(plot_save+'prediction.pdf', format='pdf', bbox_inches='tight')
         plt.close()
 
+# Plotting GP prediction error
 def plot_GP_predict_y_error(model, t_train, y, plot_save):    
     # Squared Error Plotting
     plt.figure()
@@ -66,6 +77,7 @@ def plot_GP_predict_y_error(model, t_train, y, plot_save):
         plt.savefig(plot_save+'error.pdf', format='pdf', bbox_inches='tight')
         plt.close()
 
+# Plotting GP phase (peak and valley) prediction
 def plot_GP_predict_peaks(model, t_train, y, plot_save):        
     # Peak prediction
     true_peaks=(y>y.mean()+y.std())
@@ -90,6 +102,7 @@ def plot_GP_predict_peaks(model, t_train, y, plot_save):
         plt.savefig(plot_save+'peaks.pdf', format='pdf', bbox_inches='tight')
         plt.close()
     
+# Main function
 def main(data_file, t_init, t_train, sampling_type, sampling_rate, sampling_peak, sigma_factor, gp_cov_f, opt_restarts,R):
 
     # Load data from file
@@ -148,9 +161,7 @@ def main(data_file, t_init, t_train, sampling_type, sampling_rate, sampling_peak
         f_k += pyGPs.cov.RQard(D=1)
 
     # Different realizations
-    # TODO: Undo dirty trick for paralelization
     for r in np.arange(R):
-    #for r in np.array([R]):
         # Add Gaussian noise to true observations
         y=true_y+sigma_factor*true_y.std(axis=1,keepdims=True)*np.random.randn(y_d,t_max)
         
@@ -198,7 +209,6 @@ def main(data_file, t_init, t_train, sampling_type, sampling_rate, sampling_peak
         with open(gp_name+'.pickle', 'wb') as f:
             pickle.dump(fitted_GP, f)
         
-    pdb.set_trace()
 # Making sure the main program is not executed when the module is imported
 if __name__ == '__main__':
     # Input parser

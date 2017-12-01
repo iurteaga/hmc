@@ -1,6 +1,26 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%     Script to simulate mechanistic models                                   %%%
+%%% 	    over different scaling of initial values                            %%%
+%%% 	    and different alpha and KmLH value range                            %%%
+%%% 		                                                                    %%%
+%%%	INPUT PARAMETERS:											                %%%
+%%%     model = String to model dde matlab function                             %%%
+%%%     params_file = String to file with all parameters required for the model %%%
+%%%     y0_file = String to file with initial 13 dimensional vector             %%%
+%%%     options_file = String to file with options for matlab DDE solver by Shampine and Thompson [33].        %%%
+%%%     t_max = Time to run the DDE for                                         %%%
+%%%     n_t = Number of equally spaced time-points to evaluate the dde at       %%%
+%%% 		                                                                    %%%
+%%%	OUTPUT PARAMETERS:											                %%%
+%%%     NONE                                                                    %%%
+%%%     Simulated data is saved in '../data/y_alpha_KmLH/                       %%%
+%%% 		                                                                    %%%
+%%%	Example call:											                    %%%
+%%%     simulate_dde_y_alpha_KmLH('clark', '../src/input/clark_params', '../src/input/clark_y_init_normal', '../src/input/options_file', 150, 150)  %%%
+%%% 		                                                                    %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 function simulate_dde_y_alpha_KmLH(model, params_file, y0_file, options_file, t_max, n_t)
-    % simulate_dde_y_alpha_KmLH('clark', '../src/input/clark_params', '../src/input/clark_y_init_normal', '../src/input/options_file', 150, 150)
-    
     % Model to simulate
     model_dde=eval(['@' model '_dde'])
 
