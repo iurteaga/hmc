@@ -14,6 +14,7 @@ Repository for the work on hormonal menstrual cycle: experiments with mechanisti
 Directory where the algorithms for simulation and prediction of hmc data are implemented.
 
 ./src/ contains the GP based prediction code presented in [1].
+
 ./src/MGP_DCNN/ contains the MGP+DCNN python implementation presented in [2].
 
 ### scripts
@@ -21,7 +22,9 @@ Directory where the algorithms for simulation and prediction of hmc data are imp
 Python code for evaluation and plotting of hmc algorithms.
 
 ./scripts/ contains python code to execute prediction, evaluation and plotting of results presented in [1].
+
 ./scripts/mlhc_2019.py contains python code to replicate results presented in [2].
+
 ./scripts/jupyter/ contains example python notebooks with code illustrating the use of the MGP+DCNN approach presented in [2].
 
 ### data
@@ -29,4 +32,5 @@ Python code for evaluation and plotting of hmc algorithms.
 Directory where the mechanistic model saves the generated hormonal data
 
 - data/examples: some examples of simulated hormonal data for specific parameterizations.
+
 - data/mlhc_2019: example simulated hormonal data used in [2].
