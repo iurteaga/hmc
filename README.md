@@ -25,7 +25,7 @@ Python code for evaluation and plotting of hmc algorithms.
 
 ./scripts/mlhc_2019.py contains python code to replicate results presented in [2].
 
-./scripts/jupyter/ contains example python notebooks with code illustrating the use of the MGP+DCNN approach presented in [2].
+./scripts/jupyter/ contains example python notebooks with code illustrating the MGP+DCNN approach presented in [2].
 
 ### data
 
