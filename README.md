@@ -5,7 +5,7 @@ Repository for the work on hormonal menstrual cycle: experiments with mechanisti
 ## References
 [1] Towards Personalized Modeling of the Female Hormonal Cycle: Experiments with Mechanistic Models and Gaussian Processes, Iñigo Urteaga, David J. Albers, Marija Vlajic Wheeler, Anna Druet, Hans Raffauf, Noémie Elhadad, Accepted at NIPS 2017 Workshop on Machine Learning for Health (https://ml4health.github.io/2017/)
 
-[2] Multi-Task Gaussian Processes and Dilated Convolutional Networks for Reconstruction of Reproductive Hormonal Dynamics, Iñigo Urteaga, Tristan Bertin, Theresa M. Hardy, David J. Albers, Noémie Elhadad, Presented at Machine Learning for Healtcare (MLHC) 2019
+[2] Multi-Task Gaussian Processes and Dilated Convolutional Networks for Reconstruction of Reproductive Hormonal Dynamics, Iñigo Urteaga, Tristan Bertin, Theresa M. Hardy, David J. Albers, Noémie Elhadad, Presented at Machine Learning for Healtcare (MLHC) 2019 (https://arxiv.org/abs/1908.10226)
 
 ## Directories
 
