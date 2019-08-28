@@ -15,7 +15,7 @@ Directory where the algorithms for simulation and prediction of hmc data are imp
 
 ./src/ contains the GP based prediction code presented in [1].
 
-./src/MGP_DCNN/ contains the MGP+DCNN python implementation presented in [2].
+./src/MGP_DCNN/ contains the MGP+DCNN python implementation developed in collaboration with https://github.com/TristanBertin and presented in [2].
 
 ### scripts
 
